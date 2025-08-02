@@ -1,10 +1,10 @@
 // src/components/TeamsSection.tsx
 import { useState } from 'react';
-import member_1 from '@/assets/members/member-1.png';
-import member_2 from '@/assets/members/member-2.png';
-import member_3 from '@/assets/members/member-3.png';
-import member_4 from '@/assets/members/member-4.png';
-import member_5 from '@/assets/members/member-5.png';
+import member_1 from '@/assets/members/Member-1.png';
+import member_2 from '@/assets/members/Member-2.png';
+import member_3 from '@/assets/members/Member-3.png';
+import member_4 from '@/assets/members/Member-4.png';
+import member_5 from '@/assets/members/Member-5.png';
 
 const TeamsSection = () => {
   const teams = [
