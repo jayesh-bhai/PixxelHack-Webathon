@@ -64,20 +64,20 @@ const LaunchAnimation = ({ isVisible, onComplete }: LaunchAnimationProps) => {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center">
-      {/* Blurred Background */}
-      <div className="absolute inset-0 bg-background/80 backdrop-blur-md" />
+      {/* Heavily Blurred Background */}
+      <div className="absolute inset-0 bg-background/90 backdrop-blur-xl" />
       
-      {/* Text Animation Container */}
+      {/* Text Animation Container with Pop-up Effect */}
       <div className={`
         relative z-10 text-center transform transition-all duration-500 ease-out
-        ${step > 0 ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}
-        ${fadeOut ? 'opacity-0 scale-95' : ''}
+        ${step > 0 ? 'scale-100 opacity-100' : 'scale-75 opacity-0'}
+        ${fadeOut ? 'opacity-0 scale-75' : ''}
       `}>
         {/* Line 1: YOUR */}
         <div className={`
           text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4
           transform transition-all duration-700 ease-out
-          ${step >= 1 ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}
+          ${step >= 1 ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}
         `}>
           YOUR
         </div>
@@ -86,7 +86,7 @@ const LaunchAnimation = ({ isVisible, onComplete }: LaunchAnimationProps) => {
         <div className={`
           text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4
           transform transition-all duration-700 ease-out delay-300
-          ${step >= 2 ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}
+          ${step >= 2 ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}
         `}>
           SPACE EXPERIENCE
         </div>
@@ -95,12 +95,12 @@ const LaunchAnimation = ({ isVisible, onComplete }: LaunchAnimationProps) => {
         <div className={`
           text-4xl md:text-6xl lg:text-7xl font-bold text-white
           transform transition-all duration-700 ease-out delay-500
-          ${step >= 3 ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}
+          ${step >= 3 ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}
         `}>
           IS LOADING RIGHT{' '}
           <span className={`
             inline-block transition-all duration-300 ease-in-out
-            ${nowToggle ? 'transform skew-x-[-20deg] font-extrabold' : 'transform skew-x-0'}
+            ${nowToggle ? 'transform skew-x-12 font-black italic' : 'transform skew-x-0 font-bold'}
           `}>
             NOW
           </span>
