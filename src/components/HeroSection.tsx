@@ -1,5 +1,6 @@
 import { ArrowDown } from 'lucide-react';
 import spaceHeroBg from '@/assets/space-hero-bg.jpg';
+import rocket from '@/assets/rocket-img.png';
 
 const HeroSection = () => {
   return (
@@ -33,7 +34,7 @@ const HeroSection = () => {
       <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         <div className="animate-fade-in">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6">
-            <span className="bg-gradient-aurora bg-clip-text text-transparent">
+            <span className="bg-gradient-aurora bg-clip-text ">
               Explore the
             </span>
             <br />
@@ -48,7 +49,9 @@ const HeroSection = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <div className="animate-rocket text-6xl">🚀</div>
+             <div className="animate-rocket text-6xl">
+                <img src={rocket} alt="A rocket" />
+              </div>
             <div className="text-center sm:text-left">
               <p className="text-space-blue font-semibold text-lg">
                 Next Launch: Chandrayaan-4

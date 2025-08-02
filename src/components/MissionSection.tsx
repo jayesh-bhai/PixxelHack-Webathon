@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { Rocket, Target, Globe, Star, Satellite, Zap, Eye } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'; 
 
 // Import mission images
 import gaganyaanImg from '@/assets/missions/gaganyaan.jpg';
@@ -70,12 +71,17 @@ const MissionSection = () => {
     },
   ];
 
+  const [paused, setPaused] = useState(false);
+
+  // duplicate the array so we can scroll continuously
+  const scrollingMissions = [...missions, ...missions]; 
+
   return (
     <section id="mission" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-background to-space-navy/20">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-            <span className="bg-gradient-cosmic bg-clip-text text-transparent">
+            <span className="bg-gradient-cosmic bg-clip-text ">
               Our Missions
             </span>
           </h2>
@@ -85,54 +91,129 @@ const MissionSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
-          {missions.map((mission, index) => (
-            <Card 
-              key={mission.title} 
-              className="bg-card/50 backdrop-blur-sm border-border hover:border-primary/50 transition-all duration-300 hover:scale-105 animate-fade-in overflow-hidden group"
-              style={{ animationDelay: `${index * 0.2}s` }}
-            >
-              {/* Mission Image */}
-              <div className="relative h-48 sm:h-52 overflow-hidden">
-                <img 
-                  src={mission.image} 
-                  alt={mission.title}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
-                <div className="absolute top-4 left-4 p-2 rounded-full bg-gradient-cosmic">
-                  <mission.icon className="w-5 h-5 text-primary-foreground" />
-                </div>
+        {/* ==== MARQUEE (md and up) ==== */}
+<div
+  className="hidden md:block marquee"
+  onMouseEnter={() => setPaused(true)}
+  onMouseLeave={() => setPaused(false)}
+>
+  <div
+    className="marquee-content"
+    style={{ animationPlayState: paused ? 'paused' : 'running' }}
+  >
+    {scrollingMissions.map((mission, idx) => (
+      // ← each item needs a fixed width & no shrinking:
+      <div
+        key={mission.title + idx}
+        className="min-w-[300px] flex-shrink-0 px-2"
+      >
+        {/* ← COPY your entire Card JSX from below into THIS spot */}
+        <Card
+          className="bg-card/50 backdrop-blur-sm border-border hover:border-primary/50 transition-all duration-300 hover:scale-105 overflow-hidden"
+        >
+          {/* --- Begin “Mission Image” block --- */}
+          <div className="relative h-48 sm:h-52 overflow-hidden">
+            <img
+              src={mission.image}
+              alt={mission.title}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+            <div className="absolute top-4 left-4 p-2 rounded-full bg-gradient-cosmic">
+              <mission.icon className="w-5 h-5 text-primary-foreground" />
+            </div>
+          </div>
+          {/* --- End “Mission Image” block --- */}
+
+          <CardHeader className="pb-3">
+            <div className="space-y-2">
+              <CardTitle className="text-lg sm:text-xl font-bold line-clamp-2">
+                {mission.title}
+              </CardTitle>
+              <CardDescription className="text-space-blue font-medium text-sm">
+                {mission.timeline}
+              </CardDescription>
+            </div>
+          </CardHeader>
+
+          <CardContent className="pt-0">
+            <p className="text-muted-foreground mb-4 leading-relaxed text-sm sm:text-base line-clamp-3">
+              {mission.description}
+            </p>
+            <div className="flex items-center justify-between">
+              <div
+                className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
+                  mission.status === 'Successfully Completed'
+                    ? 'bg-green-500/20 text-green-400'
+                    : mission.status === 'Active' || mission.status === 'Ongoing'
+                    ? 'bg-space-blue/20 text-space-blue'
+                    : 'bg-yellow-500/20 text-yellow-400'
+                }`}
+              >
+                {mission.status}
               </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    ))}
+  </div>
+</div>
 
-              <CardHeader className="pb-3">
-                <div className="space-y-2">
-                  <CardTitle className="text-lg sm:text-xl font-bold line-clamp-2">{mission.title}</CardTitle>
-                  <CardDescription className="text-space-blue font-medium text-sm">
-                    {mission.timeline}
-                  </CardDescription>
-                </div>
-              </CardHeader>
-
-              <CardContent className="pt-0">
-                <p className="text-muted-foreground mb-4 leading-relaxed text-sm sm:text-base line-clamp-3">
-                  {mission.description}
-                </p>
-                <div className="flex items-center justify-between">
-                  <div className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
-                    mission.status === 'Successfully Completed' 
-                      ? 'bg-green-500/20 text-green-400' 
-                      : mission.status === 'Active' || mission.status === 'Ongoing'
-                      ? 'bg-space-blue/20 text-space-blue'
-                      : 'bg-yellow-500/20 text-yellow-400'
-                  }`}>
-                    {mission.status}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+{/* ==== FALLBACK GRID (< md) ==== */}
+<div className="md:hidden grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
+  {missions.map((mission, index) => (
+    <Card
+      key={mission.title + index}
+      className="bg-card/50 backdrop-blur-sm border-border hover:border-primary/50 transition-all duration-300 hover:scale-105 overflow-hidden"
+    >
+      {/* --- Begin “Mission Image” block --- */}
+      <div className="relative h-48 sm:h-52 overflow-hidden">
+        <img
+          src={mission.image}
+          alt={mission.title}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+        <div className="absolute top-4 left-4 p-2 rounded-full bg-gradient-cosmic">
+          <mission.icon className="w-5 h-5 text-primary-foreground" />
         </div>
+      </div>
+      {/* --- End “Mission Image” block --- */}
+
+      <CardHeader className="pb-3">
+        <div className="space-y-2">
+          <CardTitle className="text-lg sm:text-xl font-bold line-clamp-2">
+            {mission.title}
+          </CardTitle>
+          <CardDescription className="text-space-blue font-medium text-sm">
+            {mission.timeline}
+          </CardDescription>
+        </div>
+      </CardHeader>
+
+      <CardContent className="pt-0">
+        <p className="text-muted-foreground mb-4 leading-relaxed text-sm sm:text-base line-clamp-3">
+          {mission.description}
+        </p>
+        <div className="flex items-center justify-between">
+          <div
+            className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
+              mission.status === 'Successfully Completed'
+                ? 'bg-green-500/20 text-green-400'
+                : mission.status === 'Active' || mission.status === 'Ongoing'
+                ? 'bg-space-blue/20 text-space-blue'
+                : 'bg-yellow-500/20 text-yellow-400'
+            }`}
+          >
+            {mission.status}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  ))}
+ </div>
+
 
         {/* Mission Stats */}
         <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8">

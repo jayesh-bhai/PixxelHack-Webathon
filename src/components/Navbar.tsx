@@ -29,15 +29,15 @@ const Navbar = ({ onLaunch }: NavbarProps) => {
         <div className="flex items-center justify-between h-16">
           {/* Logo Section */}
           <div className="flex items-center space-x-3">
-            <div className="animate-float">
+            <div className="flex items-center">
               <img 
                 src={isroLogo} 
                 alt="ISRO Logo" 
-                className="h-10 w-10 animate-glow rounded-full"
+                className="h-10 w-10 rounded-full"
               />
             </div>
-            <span className="text-2xl font-bold bg-gradient-cosmic bg-clip-text text-transparent">
-              ISRO
+            <span className="text-2xl font-bold bg-gradient-cosmic bg-clip-text">
+              I S R O
             </span>
           </div>
 
@@ -59,9 +59,9 @@ const Navbar = ({ onLaunch }: NavbarProps) => {
           <div className="flex items-center space-x-4">
             <Button
               onClick={onLaunch}
-              className="bg-gradient-cosmic hover:scale-105 transition-transform duration-300 font-semibold"
+              className="hover:scale-105 transition-transform duration-300 font-semibold"
             >
-              🚀 Launch
+               LAUNCH NOW !
             </Button>
             
             {/* Mobile menu button */}
