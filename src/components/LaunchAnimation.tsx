@@ -6,79 +6,105 @@ interface LaunchAnimationProps {
 }
 
 const LaunchAnimation = ({ isVisible, onComplete }: LaunchAnimationProps) => {
-  const [countdown, setCountdown] = useState(5);
+  const [step, setStep] = useState(0);
+  const [nowToggle, setNowToggle] = useState(false);
+  const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
     if (isVisible) {
-      const timer = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            setTimeout(onComplete, 1000);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
+      // Step 1: Show "YOUR" after 500ms
+      const timer1 = setTimeout(() => setStep(1), 500);
+      
+      // Step 2: Show "SPACE EXPERIENCE" after 1.5s
+      const timer2 = setTimeout(() => setStep(2), 1500);
+      
+      // Step 3: Show "IS LOADING RIGHT NOW" after 2.5s
+      const timer3 = setTimeout(() => setStep(3), 2500);
+      
+      // Start "NOW" toggle effect when step 3 appears
+      const nowTimer = setTimeout(() => {
+        const toggleInterval = setInterval(() => {
+          setNowToggle(prev => !prev);
+        }, 1000);
+        
+        // Stop toggle and start fade out at 4.5s
+        setTimeout(() => {
+          clearInterval(toggleInterval);
+          setFadeOut(true);
+        }, 2000);
+      }, 2500);
+      
+      // Complete animation at 5s
+      const completeTimer = setTimeout(() => {
+        onComplete();
+      }, 5000);
 
-      return () => clearInterval(timer);
+      return () => {
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+        clearTimeout(timer3);
+        clearTimeout(nowTimer);
+        clearTimeout(completeTimer);
+      };
     }
   }, [isVisible, onComplete]);
+
+  // Toggle "NOW" text effect
+  useEffect(() => {
+    if (step >= 3 && !fadeOut) {
+      const toggleInterval = setInterval(() => {
+        setNowToggle(prev => !prev);
+      }, 1000);
+
+      return () => clearInterval(toggleInterval);
+    }
+  }, [step, fadeOut]);
 
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-background flex items-center justify-center">
-      {/* Animated Background */}
-      <div className="absolute inset-0">
-        {[...Array(100)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-space-blue rounded-full animate-stars"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 4}s`,
-            }}
-          />
-        ))}
-      </div>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center">
+      {/* Blurred Background */}
+      <div className="absolute inset-0 bg-background/80 backdrop-blur-md" />
+      
+      {/* Text Animation Container */}
+      <div className={`
+        relative z-10 text-center transform transition-all duration-500 ease-out
+        ${step > 0 ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}
+        ${fadeOut ? 'opacity-0 scale-95' : ''}
+      `}>
+        {/* Line 1: YOUR */}
+        <div className={`
+          text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4
+          transform transition-all duration-700 ease-out
+          ${step >= 1 ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}
+        `}>
+          YOUR
+        </div>
 
-      {/* Launch Content */}
-      <div className="text-center z-10">
-        {countdown > 0 ? (
-          <>
-            <div className="mb-8">
-              <div className="text-8xl md:text-9xl font-bold bg-gradient-cosmic bg-clip-text text-transparent animate-pulse">
-                {countdown}
-              </div>
-            </div>
-            <div className="text-2xl md:text-3xl font-semibold text-foreground mb-4">
-              Preparing for Launch...
-            </div>
-            <div className="text-6xl animate-rocket">🚀</div>
-          </>
-        ) : (
-          <>
-            <div className="mb-8">
-              <div className="text-6xl md:text-7xl font-bold bg-gradient-aurora bg-clip-text text-transparent animate-glow">
-                LAUNCH!
-              </div>
-            </div>
-            <div className="text-xl md:text-2xl text-muted-foreground mb-8">
-              Welcome to ISRO Space Explorer
-            </div>
-            <div className="launch-loading text-8xl">🚀</div>
-          </>
-        )}
-      </div>
+        {/* Line 2: SPACE EXPERIENCE */}
+        <div className={`
+          text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4
+          transform transition-all duration-700 ease-out delay-300
+          ${step >= 2 ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}
+        `}>
+          SPACE EXPERIENCE
+        </div>
 
-      {/* Loading Bar */}
-      <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 w-64 h-2 bg-border rounded-full overflow-hidden">
-        <div 
-          className="h-full bg-gradient-cosmic transition-all duration-1000 ease-out"
-          style={{ width: `${((5 - countdown) / 5) * 100}%` }}
-        />
+        {/* Line 3: IS LOADING RIGHT NOW */}
+        <div className={`
+          text-4xl md:text-6xl lg:text-7xl font-bold text-white
+          transform transition-all duration-700 ease-out delay-500
+          ${step >= 3 ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}
+        `}>
+          IS LOADING RIGHT{' '}
+          <span className={`
+            inline-block transition-all duration-300 ease-in-out
+            ${nowToggle ? 'transform skew-x-[-20deg] font-extrabold' : 'transform skew-x-0'}
+          `}>
+            NOW
+          </span>
+        </div>
       </div>
     </div>
   );
