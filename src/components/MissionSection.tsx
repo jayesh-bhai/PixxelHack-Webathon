@@ -1,5 +1,14 @@
-import { Rocket, Target, Globe, Star } from 'lucide-react';
+import { Rocket, Target, Globe, Star, Satellite, Zap, Eye } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
+// Import mission images
+import gaganyaanImg from '@/assets/missions/gaganyaan.jpg';
+import mangalyaanImg from '@/assets/missions/mangalyaan.jpg';
+import chandrayaanImg from '@/assets/missions/chandrayaan.jpg';
+import adityaImg from '@/assets/missions/aditya-l1.jpg';
+import aryabhataImg from '@/assets/missions/aryabhata.jpg';
+import pslvImg from '@/assets/missions/pslv-c56.jpg';
+import astrosatImg from '@/assets/missions/astrosat.jpg';
 
 const MissionSection = () => {
   const missions = [
@@ -9,6 +18,7 @@ const MissionSection = () => {
       description: "India's first crewed spaceflight mission to demonstrate human spaceflight capability.",
       status: "In Development",
       timeline: "2024-2025",
+      image: gaganyaanImg,
     },
     {
       icon: Globe,
@@ -16,6 +26,7 @@ const MissionSection = () => {
       description: "Mars Orbiter Mission showcasing India's interplanetary exploration capabilities.",
       status: "Successfully Completed",
       timeline: "2013-2022",
+      image: mangalyaanImg,
     },
     {
       icon: Star,
@@ -23,6 +34,7 @@ const MissionSection = () => {
       description: "Lunar exploration missions advancing our understanding of the Moon's composition.",
       status: "Ongoing",
       timeline: "2008-Present",
+      image: chandrayaanImg,
     },
     {
       icon: Target,
@@ -30,6 +42,31 @@ const MissionSection = () => {
       description: "Solar observation mission to study the Sun's corona and solar activities.",
       status: "Active",
       timeline: "2023-Present",
+      image: adityaImg,
+    },
+    {
+      icon: Satellite,
+      title: "Aryabhata",
+      description: "India's first satellite, marking the beginning of the Indian space program and satellite technology development.",
+      status: "Successfully Completed",
+      timeline: "1975",
+      image: aryabhataImg,
+    },
+    {
+      icon: Rocket,
+      title: "PSLV-C56",
+      description: "Polar Satellite Launch Vehicle mission demonstrating India's reliable and cost-effective launch capabilities.",
+      status: "Successfully Completed",
+      timeline: "2023",
+      image: pslvImg,
+    },
+    {
+      icon: Eye,
+      title: "Astrosat",
+      description: "India's first dedicated multi-wavelength space observatory for studying celestial sources in X-ray and optical wavelengths.",
+      status: "Active",
+      timeline: "2015-Present",
+      image: astrosatImg,
     },
   ];
 
@@ -48,32 +85,41 @@ const MissionSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
           {missions.map((mission, index) => (
             <Card 
               key={mission.title} 
-              className="bg-card/50 backdrop-blur-sm border-border hover:border-primary/50 transition-all duration-300 hover:scale-105 animate-fade-in"
+              className="bg-card/50 backdrop-blur-sm border-border hover:border-primary/50 transition-all duration-300 hover:scale-105 animate-fade-in overflow-hidden group"
               style={{ animationDelay: `${index * 0.2}s` }}
             >
-              <CardHeader>
-                <div className="flex items-center space-x-4">
-                  <div className="p-3 rounded-full bg-gradient-cosmic">
-                    <mission.icon className="w-6 h-6 text-primary-foreground" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-xl font-bold">{mission.title}</CardTitle>
-                    <CardDescription className="text-space-blue font-medium">
-                      {mission.timeline}
-                    </CardDescription>
-                  </div>
+              {/* Mission Image */}
+              <div className="relative h-48 sm:h-52 overflow-hidden">
+                <img 
+                  src={mission.image} 
+                  alt={mission.title}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+                <div className="absolute top-4 left-4 p-2 rounded-full bg-gradient-cosmic">
+                  <mission.icon className="w-5 h-5 text-primary-foreground" />
+                </div>
+              </div>
+
+              <CardHeader className="pb-3">
+                <div className="space-y-2">
+                  <CardTitle className="text-lg sm:text-xl font-bold line-clamp-2">{mission.title}</CardTitle>
+                  <CardDescription className="text-space-blue font-medium text-sm">
+                    {mission.timeline}
+                  </CardDescription>
                 </div>
               </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4 leading-relaxed">
+
+              <CardContent className="pt-0">
+                <p className="text-muted-foreground mb-4 leading-relaxed text-sm sm:text-base line-clamp-3">
                   {mission.description}
                 </p>
-                <div className="flex items-center space-x-2">
-                  <div className={`px-3 py-1 rounded-full text-sm font-medium ${
+                <div className="flex items-center justify-between">
+                  <div className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
                     mission.status === 'Successfully Completed' 
                       ? 'bg-green-500/20 text-green-400' 
                       : mission.status === 'Active' || mission.status === 'Ongoing'
